@@ -3,5 +3,6 @@ This is a project which will help the user to book his tickets for his movie sho
 payment systems 
 
 **Problem Statement**
-Even though movie ticket booking system is not new nowadays but our websites will give chances to small theaters to allow booking if its possible we would like to provide ai driven approach which will help people to get reccomendation 
-of the type of movies they want to see and get movies related to that
+Even though movie ticket booking system is not new nowadays but our websites will give chances to small theaters to allow booking if its possible we would like to 
+incorporate a group feature where an individual can form group and it will automatcally sort the time available for the groups where they can watch the show
+this will give a new idea of friendship in this app
