@@ -11,11 +11,11 @@ const userSchema = mongoose.Schema({
         enum:['user','owner'],
         default:'user'
     },
-    booked:{
-        type:mongoose.Schema.Types.ObjectId,
+    booked:[{
+        type: mongoose.Schema.Types.ObjectId,
         ref:'movie',
         default:[]
-    }
+    }]
 });
 
 module.exports = mongoose.model('user',userSchema);
