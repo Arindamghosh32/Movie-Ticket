@@ -15,6 +15,14 @@ const moviesSchema = mongoose.Schema({
     },
     movieDate:{
         type:Date
+    },
+    Location:{
+        type:String
+    },
+    genre:{
+        type:String,
+        enum:['Thriller','Action','Comedy','Romentic'],
+        default:'Action'
     }
 });
 
