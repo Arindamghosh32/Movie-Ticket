@@ -15,7 +15,7 @@
         </div>
         <div class="right">
             <p>Location</p>
-            <button>Sign in</button>
+            <button id="logoutbutton">Sign Out</button>
             <i class="fa-solid fa-bars"></i>
         </div>
     </nav>
@@ -88,6 +88,22 @@
             <i class="fa-brands fa-youtube"></i>
         </div>
     </div>
-    
+    <script>
+        document.getElementById('logoutbutton').addEventListener('click',async(req,res)=>{
+            try{
+              const response = await fetch('/logout',{
+                method:'GET',
+                credentials:'include'
+              })
+              if(response.redirected){
+                window.location.href = response.url
+              }else{
+                console.error('Logout failed:',response.statusText);
+              }
+            }catch(error){
+              console.error('An error occured during logout',error);
+            }
+        });
+    </script>
 </body>
 </html>

@@ -3,6 +3,7 @@ const router = express.Router();
 const userModel = require('../models/userModel');
 const bcrypt = require('bcrypt');
 const {generatewebtoken} = require('../utils/generatewebtoken');
+const {isLoggedin} = require('./../middleware/isLoggedin');
 
 router.get('/',(req,res)=>{
     res.render("Login");
@@ -57,6 +58,13 @@ router.post('/login',async(req,res)=>{
         res.redirect('/owner/create');
       }
     }
+});
+
+
+router.get('/logout',isLoggedin,(req,res)=>{
+  res.clearCookie("token");
+  res.redirect('/');
 })
+
 
 module.exports = router;

@@ -62,7 +62,7 @@
             margin-bottom: 10px;
             row-gap:30px;
             justify-content: center;
-            grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); /* Adjusts column width to be responsive */
+            grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
             grid-template-rows: auto;
         }
 
@@ -115,9 +115,9 @@
 </head>
 <body>
    <div class="container">
-        <h1>Owner: Create Movie and Seating Arrangement</h1>
+        <h1> Create Movie and Seating Arrangement</h1>
         <form id="movie-form">
-            <!-- Movie Details -->
+           
             <div class="form-group">
                 <label for="moviename">Movie Name</label>
                 <input type="text" id="moviename" name="moviename" required>
@@ -151,7 +151,7 @@
                     <option value="Romantic">Romantic</option>
                 </select>
             </div>
-            <!-- Seating Arrangement -->
+           
             <div class="form-group">
                 <label for="rows">Number of Rows</label>
                 <input type="number" id="rows" min="1" max="26" value="10" required>
@@ -164,7 +164,7 @@
                 <h2>Seating Arrangement</h2>
                 <div id="seating-grid" class="seating-grid"></div>
             </div>
-            <!-- Form Actions -->
+            
             <div class="form-actions">
                 <button type="button" onclick="generateSeating()"  id="generate-seating-btn">Generate Seating</button>
                 <button type="submit" id="submit-btn">Submit</button>
@@ -174,38 +174,38 @@
     <script>
        const seatingGrid = document.getElementById('seating-grid');
 
-// This function generates the seating grid with rows and columns
+
 
 
 function generateSeating() {
     const rows = parseInt(document.getElementById('rows').value);
     const cols = parseInt(document.getElementById('cols').value);
-    seatingGrid.innerHTML = ''; // Clear existing seats
+    seatingGrid.innerHTML = ''; 
 
-    seatingGrid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`; // Create grid with dynamic columns
+    seatingGrid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`; 
 
     for (let i = 0; i < rows; i++) {
         const rowDiv = document.createElement('div');
-        rowDiv.className = 'row'; // Create a row container
-        rowDiv.setAttribute('data-row', String.fromCharCode(65 + i)); // Assign row name (A, B, C, ...)
+        rowDiv.className = 'row'; 
+        rowDiv.setAttribute('data-row', String.fromCharCode(65 + i)); 
 
         for (let j = 0; j < cols; j++) {
             const seat = document.createElement('div');
-            seat.className = 'seat standard'; // Default seat class
-            seat.textContent = String.fromCharCode(65 + i) + (j + 1); // Seat number (A1, A2, ...)
+            seat.className = 'seat standard'; 
+            seat.textContent = String.fromCharCode(65 + i) + (j + 1); 
 
-            // Attach the event to toggle the seat type (standard, vip, deluxe)
+            
             seat.addEventListener('click', () => toggleSeatType(seat));
 
-            rowDiv.appendChild(seat); // Add seat to the row
+            rowDiv.appendChild(seat); 
         }
 
-        seatingGrid.appendChild(rowDiv); // Append row to the grid
+        seatingGrid.appendChild(rowDiv); 
     }
 }
 
 
-// This function toggles the seat type between standard, vip, and deluxe
+
 function toggleSeatType(seat) {
     const currentType = seat.classList.contains('standard')
         ? 'standard'
@@ -213,12 +213,12 @@ function toggleSeatType(seat) {
         ? 'vip'
         : 'deluxe';
 
-    // Rotate through seat types
+
     const nextType = currentType === 'standard' ? 'vip' : currentType === 'vip' ? 'deluxe' : 'standard';
     seat.className = `seat ${nextType}`;
 }
 
-// Handling form submission to send movie details with seating arrangements to the backend
+
 document.getElementById('movie-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const movieDetails = {
@@ -229,7 +229,7 @@ document.getElementById('movie-form').addEventListener('submit', async (e) => {
         moviedate: document.getElementById('moviedate').value,
         location: document.getElementById('location').value,
         genre: document.getElementById('genre').value,
-        seating: generateSeatingData() // Get seating data
+        seating: generateSeatingData() 
     };
 
     console.log('Movie Details:', movieDetails);
@@ -240,7 +240,7 @@ document.getElementById('movie-form').addEventListener('submit', async (e) => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(movieDetails), // Use the object, not a string literal
+            body: JSON.stringify(movieDetails), 
         });
 
         if (response.ok) {
@@ -257,18 +257,18 @@ document.getElementById('movie-form').addEventListener('submit', async (e) => {
     }
 });
 
-// This function generates the seating data as expected by the backend
+
 function generateSeatingData() {
     const rows = parseInt(document.getElementById('rows').value);
     const cols = parseInt(document.getElementById('cols').value);
     const seatingData = [];
 
     for (let i = 0; i < rows; i++) {
-        const row = String.fromCharCode(65 + i); // Row label (A, B, C, ...)
+        const row = String.fromCharCode(65 + i); 
         const seats = [];
         
         for (let j = 0; j < cols; j++) {
-            const seatNumber = (j + 1).toString(); // Seat number as string (1, 2, 3, ...)
+            const seatNumber = (j + 1).toString(); 
             const seatType = document.querySelector(`[data-row="${row}"] .seat:nth-child(${j + 1})`).classList.contains('vip')
                 ? 'vip'
                 : document.querySelector(`[data-row="${row}"] .seat:nth-child(${j + 1})`).classList.contains('deluxe')
@@ -278,7 +278,7 @@ function generateSeatingData() {
             seats.push({
                 seatingNumber: seatNumber,
                 type: seatType,
-                status: 'available', // Initially, all seats are available
+                status: 'available', 
             });
         }
 
@@ -291,7 +291,7 @@ function generateSeatingData() {
     return seatingData;
 }
 
-// Initialize default seating
+
 generateSeating();
 
     </script>
