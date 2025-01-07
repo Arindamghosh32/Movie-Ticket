@@ -136,3 +136,31 @@ font-family: 'Mulish', sans-serif;
         margin-inline: 22px;
         font-size: 33px;
      }
+
+     /*Now we are going to write css for card scrolling*/
+     .card-scroll{
+        display:flex;
+        overflow-x: auto;
+        white-space: nowwrap;
+        scrollbar-width: thin;
+        padding: 10px 0;
+     }
+     .card-scroll img{
+        width: 200px;
+        margin-inline: 15px;
+        border-radius: 10px;
+     }
+     .card-scroll::-webkit-scrollbar {
+        height: 8px; /* Optional: scrollbar height */
+    }
+    
+    .card-scroll::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.5); /* Optional: scrollbar color */
+        border-radius: 4px; /* Optional: scrollbar corners */
+    }
+    .all-image{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap:2px
+    }

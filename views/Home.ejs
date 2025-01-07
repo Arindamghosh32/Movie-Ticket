@@ -41,13 +41,25 @@
 
     <div class="container">
         <h2>Recommended Movies</h2>
-        <div class="card">
-            <img src="https://static.toiimg.com/thumb/msid-114938741,width-1280,height-720,resizemode-4/114938741.jpg" alt="">
-            <img src="https://i.pinimg.com/originals/de/d1/2f/ded12f5239c6c917bf84f4b173ae0442.jpg" alt="">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSco4Vf_AoCvxU0kkSgz2AEEABQU1w--OWYWQ&s" alt="">
-            <img src="https://img.mensxp.com/media/content/2023/Dec/Upcoming-South-films-ready-to-rule-of-Bollywood-in-2024-4_658e8f8663f54.jpeg?w=720&h=1280&cc=1" alt="" class="">
-            <img src="https://bsmedia.business-standard.com/_media/bs/img/article/2024-08/29/full/1724917152-5855.jpg" alt="" >
-        </div>    
+        
+            <div class="card-scroll">
+                <% movies.forEach(function(movie){%>
+                <%if(movie.moviename){%>
+                <div class="all-image" data-id="<%=movie._id%>">
+                    
+                    <img src="<%=movie.movieimage%>" alt="">
+                <h3><%= movie.moviename %></h3>
+                    <p>Genre: <%= movie.genre %></p>
+                </div>
+                
+                <%}else{%>
+                    <img src="/default-placeholder.png" alt="No Image Available">
+                  <%}%>
+
+                  <%})%>
+            </div> 
+        
+          
     </div>
 
     <div class="banner">
@@ -104,6 +116,22 @@
               console.error('An error occured during logout',error);
             }
         });
+
+        document.addEventListener('DOMContentLoaded',()=>{
+            const movieCards = document.querySelectorAll(".all-image");
+            if (movieCards.length === 0) {
+                console.warn("No movie cards found.");
+                return;
+            }
+            movieCards.forEach(card=>{
+                card.addEventListener('click',()=>{
+                    const movieId = card.getAttribute("data-id");
+                    console.log("This is the movie id",movieId);
+                    window.location.href = `/user/movie/${movieId}`;
+                    console.log("Its been clicked");
+                })
+            })
+        })
     </script>
 </body>
 </html>
