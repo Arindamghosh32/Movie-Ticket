@@ -1,12 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Book Seats</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        p {
+            font-size: 18px;
+            color: #555;
+        }
+
+        #seating {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .seat {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            background-color: green;
+        }
+
+        .seat:hover {
+            transform: scale(1.1);
+        }
+
+        .vip {
+            background-color: gold;
+            color: black;
+        }
+
+        .deluxe {
+            background-color: purple;
+        }
+
+        .booked {
+            background-color: red;
+            cursor: not-allowed;
+        }
+
+        .selected {
+            background-color: blue !important;
+        }
+
+        .screen {
+            width: 60%;
+            height: 50px;
+            background: black;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 10px;
+            margin: 20px auto;
+        }
+
+        #confirm-payment {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: none;
+        }
+
+        #confirm-payment:hover {
+            background-color: #218838;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Booking</h1>
-    
+    <h1>Book Seats for <%= movie.moviename %>
+    </h1>
+    <p>Price: $<%= movie.movieprice %>
+    </p>
+    <p>Location: <%= movie.Location %>
+    </p>
+    <div class="screen">SCREEN</div>
+    <div id="seating">
+        <% movie.seating.forEach(row=> { %>
+            <div class="row">
+                <strong>Row <%= row.row %>: </strong>
+                <% row.seats.forEach(seat=> { %>
+                    <div class="seat <%= seat.type %> <%= seat.status === 'booked' ? 'booked' : '' %>"
+                        data-row="<%= row.row %>" data-seat="<%= seat.seatingNumber %>">
+                        <%= seat.seatingNumber %>
+                    </div>
+                    <% }) %>
+            </div>
+            <% }) %>
+    </div>
+    <button id="confirm-payment">Confirm & Pay</button>
+    <script>
+        const seats = document.querySelectorAll('.seat');
+        const paymentButton = document.getElementById('confirm-payment');
+        seats.forEach(seat => {
+            seat.addEventListener('click', function () {
+                if (!this.classList.contains('booked')) {
+                    this.classList.toggle('selected');
+                    const selectedSeats = document.querySelectorAll('.selected').length;
+                    paymentButton.style.display = selectedSeats > 0 ? 'block' : 'none';
+                }
+            });
+        });
+        paymentButton.addEventListener('click', async function () {
+            const selectedSeats = document.querySelectorAll('.selected');
+            if (selectedSeats.length > 0) {
+                const confirmPayment = confirm(`You have selected ${selectedSeats.length} seat(s). Proceed to payment?`);
+                if (confirmPayment) {
+                    const selectedSeatDetails = Array.from(selectedSeats).map(seat => ({
+                        row: seat.getAttribute('data-row'), // Include row information
+                        seat: seat.getAttribute('data-seat')
+                    }));
+
+                    const userId = "<%= userId%>"
+                    const movieId = "<%= movie._id %>";
+                    try {
+                        const response = await fetch(`/user/update-seats/${movieId}`, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ selectedSeats: selectedSeatDetails, userId })
+                        });
+                        const result = await response.json();
+                        if (result.success) {
+                            alert("Payment successful! Your seats have been booked.");
+                            location.reload();
+                        } else {
+
+                            alert("Error booking seats. Please try again. \n" + (result.message || "Unknown error"));
+                        }
+                    } catch (error) {
+                        console.error("Error:", error);
+                        alert("Server error. Try again later.");
+                    }
+                }
+            }
+        });
+    </script>
 </body>
+
 </html>

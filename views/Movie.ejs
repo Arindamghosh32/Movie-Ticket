@@ -8,14 +8,14 @@
 </head>
 <body>
     <header>
-        <a href="/book" class="book-button">Book My Show</a>
+        <a href="/user/book/<%=movie._id%>" class="book-button">Book My Show</a>
     </header>
     <main class="movie-container">
         <img src="<%=movie.movieimage%>" alt="Movie Poster" class="movie-image">
         <div class="movie-details">
             <h1><%=movie.moviename%></h1>
             <p><%=movie.movieabout || 'No description available for this movie.'%></p>
-            <p>Rs .<%=movie.movieprice%></p>
+            <p>$ .<%=movie.movieprice%></p>
         </div>
     </main>
 
