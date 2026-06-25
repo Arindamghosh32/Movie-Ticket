@@ -42,13 +42,14 @@
                 <i class="fas fa-lock"></i>
                 <input type="password" name="password"  placeholder="Password" />
               </div>
-              <div class="input-field">
-                <i class="fas fa-user-shield"></i>
-                <select name="role" required>
-                    <option value="user">User</option>
-                    <option value="owner">Owner</option>
-                </select>
-            </div>
+              <div class="input-field role-field">
+  <i class="fas fa-user-shield"></i>
+  <select name="role" required>
+    <option value="" disabled selected>Role</option>
+    <option value="user">User</option>
+    <option value="owner">Owner</option>
+  </select>
+</div>
             
               <input type="submit" id="registerBtn" class="btn" value="Sign up" />
               

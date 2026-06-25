@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -60,7 +61,7 @@
             display: grid;
             gap: 20px;
             margin-bottom: 10px;
-            row-gap:30px;
+            row-gap: 30px;
             justify-content: center;
             grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
             grid-template-rows: auto;
@@ -111,13 +112,33 @@
         .form-actions button:hover {
             background-color: #0056b3;
         }
+
+        .dashboard-btn {
+            display: inline-block;
+            padding: 12px 14px;
+            background-color: red;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+            margin-left: 79rem;
+            margin-top: 1rem;
+        }
+
+        .dashboard-btn:hover {
+            background-color: darkred;
+        }
     </style>
 </head>
+
 <body>
-   <div class="container">
+    <a href="/user/dashboard" class="dashboard-btn">Dashboard</a>
+    <div class="container">
         <h1> Create Movie and Seating Arrangement</h1>
         <form id="movie-form">
-           
+
             <div class="form-group">
                 <label for="moviename">Movie Name</label>
                 <input type="text" id="moviename" name="moviename" required>
@@ -151,7 +172,7 @@
                     <option value="Romantic">Romantic</option>
                 </select>
             </div>
-           
+
             <div class="form-group">
                 <label for="rows">Number of Rows</label>
                 <input type="number" id="rows" min="1" max="26" value="10" required>
@@ -164,136 +185,137 @@
                 <h2>Seating Arrangement</h2>
                 <div id="seating-grid" class="seating-grid"></div>
             </div>
-            
+
             <div class="form-actions">
-                <button type="button" onclick="generateSeating()"  id="generate-seating-btn">Generate Seating</button>
+                <button type="button" onclick="generateSeating()" id="generate-seating-btn">Generate Seating</button>
                 <button type="submit" id="submit-btn">Submit</button>
             </div>
         </form>
     </div>
     <script>
-       const seatingGrid = document.getElementById('seating-grid');
+        const seatingGrid = document.getElementById('seating-grid');
 
 
 
 
-function generateSeating() {
-    const rows = parseInt(document.getElementById('rows').value);
-    const cols = parseInt(document.getElementById('cols').value);
-    seatingGrid.innerHTML = ''; 
+        function generateSeating() {
+            const rows = parseInt(document.getElementById('rows').value);
+            const cols = parseInt(document.getElementById('cols').value);
+            seatingGrid.innerHTML = '';
 
-    seatingGrid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`; 
+            seatingGrid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
 
-    for (let i = 0; i < rows; i++) {
-        const rowDiv = document.createElement('div');
-        rowDiv.className = 'row'; 
-        rowDiv.setAttribute('data-row', String.fromCharCode(65 + i)); 
+            for (let i = 0; i < rows; i++) {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'row';
+                rowDiv.setAttribute('data-row', String.fromCharCode(65 + i));
 
-        for (let j = 0; j < cols; j++) {
-            const seat = document.createElement('div');
-            seat.className = 'seat standard'; 
-            seat.textContent = String.fromCharCode(65 + i) + (j + 1); 
+                for (let j = 0; j < cols; j++) {
+                    const seat = document.createElement('div');
+                    seat.className = 'seat standard';
+                    seat.textContent = String.fromCharCode(65 + i) + (j + 1);
 
-            
-            seat.addEventListener('click', () => toggleSeatType(seat));
 
-            rowDiv.appendChild(seat); 
+                    seat.addEventListener('click', () => toggleSeatType(seat));
+
+                    rowDiv.appendChild(seat);
+                }
+
+                seatingGrid.appendChild(rowDiv);
+            }
         }
 
-        seatingGrid.appendChild(rowDiv); 
-    }
-}
 
 
-
-function toggleSeatType(seat) {
-    const currentType = seat.classList.contains('standard')
-        ? 'standard'
-        : seat.classList.contains('vip')
-        ? 'vip'
-        : 'deluxe';
-
-
-    const nextType = currentType === 'standard' ? 'vip' : currentType === 'vip' ? 'deluxe' : 'standard';
-    seat.className = `seat ${nextType}`;
-}
+        function toggleSeatType(seat) {
+            const currentType = seat.classList.contains('standard')
+                ? 'standard'
+                : seat.classList.contains('vip')
+                    ? 'vip'
+                    : 'deluxe';
 
 
-document.getElementById('movie-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const movieDetails = {
-        moviename: document.getElementById('moviename').value,
-        movieprice: document.getElementById('movieprice').value,
-        movieimage: document.getElementById('movieimage').value,
-        movieabout: document.getElementById('movieabout').value,
-        moviedate: document.getElementById('moviedate').value,
-        location: document.getElementById('location').value,
-        genre: document.getElementById('genre').value,
-        seating: generateSeatingData() 
-    };
+            const nextType = currentType === 'standard' ? 'vip' : currentType === 'vip' ? 'deluxe' : 'standard';
+            seat.className = `seat ${nextType}`;
+        }
 
-    console.log('Movie Details:', movieDetails);
 
-    try {
-        const response = await fetch('http://localhost:3000/owner/created', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(movieDetails), 
+        document.getElementById('movie-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const movieDetails = {
+                moviename: document.getElementById('moviename').value,
+                movieprice: document.getElementById('movieprice').value,
+                movieimage: document.getElementById('movieimage').value,
+                movieabout: document.getElementById('movieabout').value,
+                moviedate: document.getElementById('moviedate').value,
+                location: document.getElementById('location').value,
+                genre: document.getElementById('genre').value,
+                seating: generateSeatingData()
+            };
+
+            console.log('Movie Details:', movieDetails);
+
+            try {
+                const response = await fetch('http://localhost:3000/owner/created', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(movieDetails),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    alert('Movie details submitted successfully');
+                    console.log('Response:', data);
+                } else {
+                    console.error('Error:', response.statusText);
+                    alert('Failed to submit movie details');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while submitting movie details');
+            }
         });
 
-        if (response.ok) {
-            const data = await response.json();
-            alert('Movie details submitted successfully');
-            console.log('Response:', data);
-        } else {
-            console.error('Error:', response.statusText);
-            alert('Failed to submit movie details');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred while submitting movie details');
-    }
-});
 
+        function generateSeatingData() {
+            const rows = parseInt(document.getElementById('rows').value);
+            const cols = parseInt(document.getElementById('cols').value);
+            const seatingData = [];
 
-function generateSeatingData() {
-    const rows = parseInt(document.getElementById('rows').value);
-    const cols = parseInt(document.getElementById('cols').value);
-    const seatingData = [];
+            for (let i = 0; i < rows; i++) {
+                const row = String.fromCharCode(65 + i);
+                const seats = [];
 
-    for (let i = 0; i < rows; i++) {
-        const row = String.fromCharCode(65 + i); 
-        const seats = [];
-        
-        for (let j = 0; j < cols; j++) {
-            const seatNumber = (j + 1).toString(); 
-            const seatType = document.querySelector(`[data-row="${row}"] .seat:nth-child(${j + 1})`).classList.contains('vip')
-                ? 'vip'
-                : document.querySelector(`[data-row="${row}"] .seat:nth-child(${j + 1})`).classList.contains('deluxe')
-                ? 'deluxe'
-                : 'standard';
+                for (let j = 0; j < cols; j++) {
+                    const seatNumber = (j + 1).toString();
+                    const seatType = document.querySelector(`[data-row="${row}"] .seat:nth-child(${j + 1})`).classList.contains('vip')
+                        ? 'vip'
+                        : document.querySelector(`[data-row="${row}"] .seat:nth-child(${j + 1})`).classList.contains('deluxe')
+                            ? 'deluxe'
+                            : 'standard';
 
-            seats.push({
-                seatingNumber: seatNumber,
-                type: seatType,
-                status: 'available', 
-            });
+                    seats.push({
+                        seatingNumber: seatNumber,
+                        type: seatType,
+                        status: 'available',
+                    });
+                }
+
+                seatingData.push({
+                    row: row,
+                    seats: seats
+                });
+            }
+
+            return seatingData;
         }
 
-        seatingData.push({
-            row: row,
-            seats: seats
-        });
-    }
 
-    return seatingData;
-}
-
-
-generateSeating();
+        generateSeating();
 
     </script>
 </body>
+
 </html>
