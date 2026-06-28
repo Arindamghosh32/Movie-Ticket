@@ -153,7 +153,7 @@
             </div>
             <div class="form-group">
                 <label for="movieabout">About the Movie</label>
-                <input type="text" id="movieabout" name="movieAbout" required>
+                <textarea id="movieabout" name="movieAbout" rows="6" cols="50"></textarea>
             </div>
             <div class="form-group">
                 <label for="moviedate">Date</label>
@@ -246,9 +246,9 @@
                 moviename: document.getElementById('moviename').value,
                 movieprice: document.getElementById('movieprice').value,
                 movieimage: document.getElementById('movieimage').value,
-                movieabout: document.getElementById('movieabout').value,
-                moviedate: document.getElementById('moviedate').value,
-                location: document.getElementById('location').value,
+                movieAbout: document.getElementById('movieabout').value,
+                movieDate: document.getElementById('moviedate').value,
+                Location: document.getElementById('location').value,
                 genre: document.getElementById('genre').value,
                 seating: generateSeatingData()
             };
