@@ -6,3 +6,7 @@ payment systems
 Even though movie ticket booking system is not new nowadays but our websites will give chances to small theaters to allow booking if its possible we would like to 
 incorporate a group feature where an individual can form group and it will automatcally sort the time available for the groups where they can watch the show
 this will give a new idea of friendship in this app
+
+
+the live link is
+https://movie-ticket-2-kgim.onrender.com/
