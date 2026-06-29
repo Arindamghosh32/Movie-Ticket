@@ -3,106 +3,488 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Owner Dashboard</title>
+    <title>Owner Dashboard – CineBook</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Mulish:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-        body { background-color: #f4f6f9; padding: 30px; }
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        h1 { color: #333; }
-        .add-btn { background-color: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
-        .card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
-        .card img { width: 100%; height: 300px; object-fit: cover; }
-        .card-content { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .card h3 { margin-bottom: 10px; color: #222; font-size: 1.2rem; }
-        .price { color: #e44d26; font-weight: bold; margin-bottom: 15px; }
-        
-        .booking-stats {
-            background-color: #f8f9fa;
-            border: 1px solid #eee;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
-            color: #555;
-        }
-        .booking-stats div {
-            margin-bottom: 4px;
-        }
-        .booking-stats strong {
-            color: #333;
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
-        .remove-btn { background-color: #dc3545; color: white; border: none; padding: 8px 12px; width: 100%; border-radius: 4px; cursor: pointer; font-weight: bold; transition: background 0.2s; margin-top: 5px; }
-        .remove-btn:hover { background-color: #c82333; }
-        .no-movies { grid-column: 1 / -1; text-align: center; color: #777; padding: 50px; font-size: 1.2rem; }
+        :root {
+            --bg:       #0D0D0D;
+            --surface:  #161616;
+            --surface2: #1F1F1F;
+            --red:      #E8132A;
+            --red-dark: #b50e20;
+            --white:    #FFFFFF;
+            --muted:    #888888;
+            --border:   rgba(255,255,255,0.07);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--white);
+            font-family: 'Mulish', sans-serif;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5%;
+            height: 64px;
+            background: rgba(13,13,13,0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-brand {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+        }
+        .brand-cine { color: var(--white); }
+        .brand-book { color: var(--red); }
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+        .nav-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+        .nav-logout {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--white);
+            text-decoration: none;
+            border: 1px solid var(--border);
+            padding: 6px 16px;
+            border-radius: 4px;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .nav-logout:hover { background: var(--red); border-color: var(--red); }
+
+        /* HERO STRIP */
+        .dashboard-hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 40px 5% 32px;
+            border-bottom: 1px solid var(--border);
+        }
+        .hero-eyebrow {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--red);
+            margin-bottom: 4px;
+        }
+        .hero-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            letter-spacing: 3px;
+            line-height: 1;
+        }
+
+        /* ADD BUTTON */
+        .add-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--white);
+            background: var(--red);
+            padding: 12px 24px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background 0.2s, transform 0.15s;
+            white-space: nowrap;
+        }
+        .add-btn:hover { background: var(--red-dark); transform: translateY(-1px); }
+
+        /* MAIN */
+        .dashboard-main { padding: 40px 5% 60px; }
+
+        /* GRID */
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 28px;
+        }
+
+        /* CARD */
+        .movie-card {
+            background: var(--surface);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.5s ease var(--delay, 0s),
+                        transform 0.5s ease var(--delay, 0s),
+                        box-shadow 0.3s;
+        }
+        .movie-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .movie-card:hover { box-shadow: 0 12px 40px rgba(232,19,42,0.18); }
+
+        /* POSTER */
+        .card-poster {
+            position: relative;
+            height: 300px;
+            overflow: hidden;
+        }
+        .card-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.45s ease;
+        }
+        .movie-card:hover .card-poster img { transform: scale(1.04); }
+        .poster-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(13,13,13,0.85) 0%, transparent 55%);
+            display: flex;
+            align-items: flex-end;
+            padding: 14px;
+        }
+        .genre-badge {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--white);
+            background: var(--red);
+            padding: 4px 10px;
+            border-radius: 3px;
+        }
+
+        /* CARD BODY */
+        .card-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            flex-grow: 1;
+        }
+        .movie-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.35rem;
+            letter-spacing: 1.5px;
+            line-height: 1.15;
+        }
+        .movie-price { font-size: 0.9rem; color: var(--muted); }
+        .movie-price strong { color: var(--red); font-size: 1rem; }
+
+        /* FILL BAR */
+        .fill-bar-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 6px;
+        }
+        .fill-percent { color: var(--red); }
+        .fill-bar-track {
+            height: 4px;
+            background: var(--surface2);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+        .fill-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--red-dark), var(--red));
+            border-radius: 99px;
+        }
+
+        /* STATS GRID */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+        .stat-box {
+            background: var(--surface2);
+            border-radius: 6px;
+            padding: 10px 6px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        .stat-num {
+            display: block;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.4rem;
+            letter-spacing: 1px;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+        .stat-lbl {
+            display: block;
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+        .stat-total .stat-num { color: var(--red); }
+        .stat-std   .stat-num { color: #aaaaaa; }
+        .stat-vip   .stat-num { color: #f0c040; }
+        .stat-dlx   .stat-num { color: #64c8ff; }
+
+        /* SEATS LEFT */
+        .seats-left-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.83rem;
+            color: var(--muted);
+            padding-top: 8px;
+            border-top: 1px solid var(--border);
+        }
+        .seats-left-row strong { color: var(--white); }
+        .dot { color: #44cc88; }
+
+        /* REMOVE BTN */
+        .remove-btn {
+            width: 100%;
+            padding: 11px;
+            background: transparent;
+            border: 1px solid rgba(232,19,42,0.45);
+            color: var(--red);
+            font-family: 'Mulish', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
+            margin-top: auto;
+        }
+        .remove-btn:hover { background: var(--red); border-color: var(--red); color: var(--white); }
+
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+        .empty-icon { font-size: 3.5rem; }
+        .empty-state h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            letter-spacing: 2px;
+        }
+        .empty-state p { color: var(--muted); font-size: 0.95rem; max-width: 300px; }
+
+        /* FOOTER */
+        .dashboard-footer {
+            border-top: 1px solid var(--border);
+            text-align: center;
+            padding: 20px;
+            font-size: 0.78rem;
+            color: var(--muted);
+            letter-spacing: 0.5px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 640px) {
+            .navbar { padding: 0 4%; }
+            .nav-label { display: none; }
+            .dashboard-hero { padding: 28px 4% 24px; flex-direction: column; align-items: flex-start; }
+            .add-btn { width: 100%; justify-content: center; }
+            .dashboard-main { padding: 28px 4% 48px; }
+            .movie-grid { grid-template-columns: 1fr; gap: 20px; }
+            .card-poster { height: 260px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (min-width: 641px) and (max-width: 1024px) {
+            .movie-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .movie-card { opacity: 1; transform: none; transition: none; }
+            .card-poster img { transition: none; }
+        }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Owner Dashboard</h1>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="brand-cine">CINE</span><span class="brand-book">BOOK</span>
+        </div>
+        <div class="nav-right">
+            <span class="nav-label">Owner Portal</span>
+            <a href="/logout" class="nav-logout">Logout</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="dashboard-hero">
+        <div>
+            <p class="hero-eyebrow">Manage Your Listings</p>
+            <h1 class="hero-title">Owner Dashboard</h1>
+        </div>
         <a href="/owner/create" class="add-btn">+ Add New Movie</a>
-    </header>
+    </section>
 
-    <main class="grid">
+    <!-- MAIN -->
+    <main class="dashboard-main">
         <% if (movies && movies.length > 0) { %>
-            <% movies.forEach(movie => { %>
-                <div class="card">
-                    <img src="<%= movie.movieimage || 'https://via.placeholder.com/250x300?text=No+Image' %>" alt="Movie Poster">
-                    <div class="card-content">
-                        <div>
-                            <h3><%= movie.moviename %></h3>
-                            <p class="price">Rs <%= movie.movieprice %></p>
-                            
-                            <% 
-                                let totalBookings = 0;
-                                let standardBookings = 0;
-                                let vipBookings = 0;
-                                let deluxeBookings = 0;
-                                let seatsLeft = 0; // 🟢 Added tracker variable
+            <div class="movie-grid">
+                <% movies.forEach((movie, index) => { %>
+                    <%
+                        let totalBookings = 0;
+                        let standardBookings = 0;
+                        let vipBookings = 0;
+                        let deluxeBookings = 0;
+                        let seatsLeft = 0;
 
-                                if (movie.seating && movie.seating.length > 0) {
-                                    movie.seating.forEach(row => {
-                                        if (row.seats && row.seats.length > 0) {
-                                            row.seats.forEach(seat => {
-                                                if (seat.status === 'booked') {
-                                                    totalBookings++;
-                                                    if (seat.type === 'standard') standardBookings++;
-                                                    else if (seat.type === 'vip') vipBookings++;
-                                                    else if (seat.type === 'deluxe') deluxeBookings++;
-                                                } else if (seat.status === 'available') {
-                                                    seatsLeft++; // 🟢 Increment for open seats
-                                                }
-                                            });
+                        if (movie.seating && movie.seating.length > 0) {
+                            movie.seating.forEach(row => {
+                                if (row.seats && row.seats.length > 0) {
+                                    row.seats.forEach(seat => {
+                                        if (seat.status === 'booked') {
+                                            totalBookings++;
+                                            if (seat.type === 'standard') standardBookings++;
+                                            else if (seat.type === 'vip') vipBookings++;
+                                            else if (seat.type === 'deluxe') deluxeBookings++;
+                                        } else if (seat.status === 'available') {
+                                            seatsLeft++;
                                         }
                                     });
                                 }
-                            %>
+                            });
+                        }
 
-                            <div class="booking-stats">
-                                <div><strong>Total Bookings:</strong> <%= totalBookings %></div>
-                                <div>• Standard Booked: <%= standardBookings %></div>
-                                <div>• VIP Booked: <%= vipBookings %></div>
-                                <div>• Deluxe Booked: <%= deluxeBookings %></div>
-                                <div style="margin-top: 6px; padding-top: 4px; border-top: 1px dashed #ddd;">
-                                    <strong>Seats Left:</strong> <%= seatsLeft %>
-                                </div>
+                        let totalSeats = totalBookings + seatsLeft;
+                        let fillPercent = totalSeats > 0 ? Math.round((totalBookings / totalSeats) * 100) : 0;
+                    %>
+
+                    <div class="movie-card" style="--delay: <%= index * 0.07 %>s">
+                        <div class="card-poster">
+                            <img 
+                                src="<%= movie.movieimage || 'https://via.placeholder.com/400x560/0D0D0D/E8132A?text=NO+IMAGE' %>"
+                                alt="<%= movie.moviename %>"
+                                loading="lazy"
+                            >
+                            <div class="poster-overlay">
+                                <span class="genre-badge"><%= movie.genre || 'Cinema' %></span>
                             </div>
                         </div>
-                        
-                        <form action="/owner/movie/delete/<%= movie._id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this movie?');">
-                            <button type="submit" class="remove-btn">Remove Movie</button>
-                        </form>
+
+                        <div class="card-body">
+                            <h3 class="movie-title"><%= movie.moviename %></h3>
+                            <p class="movie-price">Rs <strong><%= movie.movieprice %></strong></p>
+
+                            <!-- OCCUPANCY BAR -->
+                            <div>
+                                <div class="fill-bar-label">
+                                    <span>Occupancy</span>
+                                    <span class="fill-percent"><%= fillPercent %>%</span>
+                                </div>
+                                <div class="fill-bar-track">
+                                    <div class="fill-bar-fill" style="width: <%= fillPercent %>%"></div>
+                                </div>
+                            </div>
+
+                            <!-- STATS -->
+                            <div class="stats-grid">
+                                <div class="stat-box stat-total">
+                                    <span class="stat-num"><%= totalBookings %></span>
+                                    <span class="stat-lbl">Booked</span>
+                                </div>
+                                <div class="stat-box stat-std">
+                                    <span class="stat-num"><%= standardBookings %></span>
+                                    <span class="stat-lbl">Standard</span>
+                                </div>
+                                <div class="stat-box stat-vip">
+                                    <span class="stat-num"><%= vipBookings %></span>
+                                    <span class="stat-lbl">VIP</span>
+                                </div>
+                                <div class="stat-box stat-dlx">
+                                    <span class="stat-num"><%= deluxeBookings %></span>
+                                    <span class="stat-lbl">Deluxe</span>
+                                </div>
+                            </div>
+
+                            <!-- SEATS LEFT -->
+                            <div class="seats-left-row">
+                                <span class="dot">◎</span>
+                                <span><strong><%= seatsLeft %></strong> seats available</span>
+                            </div>
+
+                            <!-- DELETE -->
+                            <form 
+                                action="/owner/movie/delete/<%= movie._id %>" 
+                                method="POST"
+                                onsubmit="return confirm('Remove this movie permanently?');"
+                            >
+                                <button type="submit" class="remove-btn">Remove Movie</button>
+                            </form>
+                        </div>
                     </div>
-                </div>
-            <% }) %>
+                <% }) %>
+            </div>
+
         <% } else { %>
-            <div class="no-movies">
-                <p>You haven't posted any movies yet.</p>
+            <div class="empty-state">
+                <div class="empty-icon">🎬</div>
+                <h2>No Movies Listed Yet</h2>
+                <p>Start by adding your first movie to the platform.</p>
+                <a href="/owner/create" class="add-btn">+ Add New Movie</a>
             </div>
         <% } %>
     </main>
+
+    <footer class="dashboard-footer">
+        © 2025 CineBook · Owner Portal
+    </footer>
+
+    <script>
+        const cards = document.querySelectorAll('.movie-card');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        cards.forEach(card => observer.observe(card));
+    </script>
 
 </body>
 </html>

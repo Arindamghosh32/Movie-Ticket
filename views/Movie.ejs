@@ -4,23 +4,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/stylesheets/Movie.css">
-    <title>Movie Details</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <title><%=movie.moviename%></title>
 </head>
 <body>
-    <header>
-        <a href="/user/book/<%=movie._id%>" class="book-button">Book My Show</a>
-    </header>
-    <main class="movie-container">
-        <img src="<%=movie.movieimage%>" alt="Movie Poster" class="movie-image">
-        <div class="movie-details">
-            <h1><%=movie.moviename%></h1>
-            <p><%=movie.movieAbout || 'No description available for this movie.'%></p>
-            <p> .<%=movie.movieprice%></p>
+
+    <!-- NAV -->
+    <nav class="navbar">
+        <span class="nav-logo">🎬 CineBook</span>
+        <a href="/user/book/<%=movie._id%>" class="book-button">Book Tickets</a>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" style="--bg: url('<%=movie.movieimage%>')">
+        <div class="hero-overlay"></div>
+        <div class="hero-content reveal">
+            <span class="badge">Now Showing</span>
+            <h1 class="movie-title"><%=movie.moviename%></h1>
+            <p class="movie-about"><%=movie.movieAbout || 'No description available for this movie.'%></p>
+            <div class="hero-actions">
+                <a href="/user/book/<%=movie._id%>" class="book-button book-button--hero">Book Now</a>
+                <span class="price-tag">
+                    <span class="price-label">From</span>
+                    <span class="price-value">₹<%=movie.movieprice%></span>
+                </span>
+            </div>
         </div>
-    </main>
+    </section>
+
+    <!-- POSTER + DETAILS STRIP -->
+    <section class="details-section">
+        <div class="poster-card reveal-left">
+            <img src="<%=movie.movieimage%>" alt="<%=movie.moviename%> Poster" class="poster-img">
+        </div>
+        <div class="info-card reveal-right">
+            <h2 class="section-heading">About the Film</h2>
+            <p class="info-text"><%=movie.movieAbout || 'No description available for this movie.'%></p>
+            <div class="meta-row">
+                <div class="meta-item">
+                    <span class="meta-label">Ticket Price</span>
+                    <span class="meta-value">₹<%=movie.movieprice%></span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Status</span>
+                    <span class="meta-value status-live">● Live Now</span>
+                </div>
+            </div>
+            <a href="/user/book/<%=movie._id%>" class="book-button book-button--outline">Reserve Your Seat →</a>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <p>© 2024 CineBook. All rights reserved.</p>
+    </footer>
 
     <script>
-        
+        // Scroll reveal
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    observer.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.reveal, .reveal-left, .reveal-right')
+            .forEach(el => observer.observe(el));
     </script>
 </body>
 </html>

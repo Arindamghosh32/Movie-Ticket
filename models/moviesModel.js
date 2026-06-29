@@ -62,4 +62,6 @@ const moviesSchema = mongoose.Schema({
     ]
 });
 
+moviesSchema.index({ movieDate: 1 }, { expireAfterSeconds: 0 });
+
 module.exports = mongoose.model('movie',moviesSchema);
