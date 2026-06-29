@@ -13,6 +13,16 @@
             background-color: #f8f9fa;
         }
 
+        /* 🟢 Added: Action bar container to hold the utility links together at the top right */
+        .top-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            max-width: 1200px;
+            margin: 1rem auto 0 auto;
+            padding: 0 20px;
+        }
+
         .container {
             max-width: 1200px;
             margin: 20px auto;
@@ -123,18 +133,37 @@
             font-weight: bold;
             border-radius: 8px;
             transition: background-color 0.3s;
-            margin-left: 79rem;
-            margin-top: 1rem;
         }
 
         .dashboard-btn:hover {
             background-color: darkred;
         }
+
+        /* 🟢 Added: Styling rules for your Logout Action Link */
+        .logout-btn {
+            display: inline-block;
+            padding: 12px 14px;
+            background-color: #4a5568;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background-color: #2d3748;
+        }
     </style>
 </head>
 
 <body>
-    <a href="/user/dashboard" class="dashboard-btn">Dashboard</a>
+    <div class="top-actions">
+        <a href="/owner/dashboard" class="dashboard-btn">Dashboard</a>
+        <a href="/logout" class="logout-btn">Logout</a>
+    </div>
+
     <div class="container">
         <h1> Create Movie and Seating Arrangement</h1>
         <form id="movie-form">
@@ -194,9 +223,10 @@
     </div>
     <script>
         const seatingGrid = document.getElementById('seating-grid');
+        const dateInput = document.getElementById('moviedate');
 
-
-
+        const todayStr = new Date().toISOString().split('T')[0];
+        dateInput.min = todayStr;
 
         function generateSeating() {
             const rows = parseInt(document.getElementById('rows').value);
@@ -215,17 +245,13 @@
                     seat.className = 'seat standard';
                     seat.textContent = String.fromCharCode(65 + i) + (j + 1);
 
-
                     seat.addEventListener('click', () => toggleSeatType(seat));
-
                     rowDiv.appendChild(seat);
                 }
 
                 seatingGrid.appendChild(rowDiv);
             }
         }
-
-
 
         function toggleSeatType(seat) {
             const currentType = seat.classList.contains('standard')
@@ -234,14 +260,22 @@
                     ? 'vip'
                     : 'deluxe';
 
-
             const nextType = currentType === 'standard' ? 'vip' : currentType === 'vip' ? 'deluxe' : 'standard';
             seat.className = `seat ${nextType}`;
         }
 
-
         document.getElementById('movie-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            const selectedDate = new Date(dateInput.value).setHours(0, 0, 0, 0);
+            const systemToday = new Date().setHours(0, 0, 0, 0);
+
+            if (selectedDate < systemToday) {
+                alert("⚠️ You cannot select a date in the past! Please choose today or a future date.");
+                dateInput.value = todayStr;
+                return; 
+            }
+
             const movieDetails = {
                 moviename: document.getElementById('moviename').value,
                 movieprice: document.getElementById('movieprice').value,
@@ -278,7 +312,6 @@
             }
         });
 
-
         function generateSeatingData() {
             const rows = parseInt(document.getElementById('rows').value);
             const cols = parseInt(document.getElementById('cols').value);
@@ -312,9 +345,7 @@
             return seatingData;
         }
 
-
         generateSeating();
-
     </script>
 </body>
 

@@ -36,7 +36,10 @@ router.post('/register',async(req,res)=>{
         user: {fullname:user.fullname,email:user.email,role:user.role}
     });
     }catch(err){
-      console.log("There is an error registering the user",err);
+      console.log("================ REGISTRATION ERROR ================");
+    console.error(err);
+    console.log("====================================================");
+    return res.status(500).send("Registration failed internal error.");
     }
     
 });
@@ -47,6 +50,7 @@ router.post('/login',async(req,res)=>{
 
     if(!user){
         console.log("Please Fill Your Details");
+        return res.status(401).send("Invalid email or password");
     }
     const match = await bcrypt.compare(password,user.password);
     if(match){

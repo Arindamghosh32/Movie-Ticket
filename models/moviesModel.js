@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 
 const moviesSchema = mongoose.Schema({
+    //linked to the user model since owners are users with role owner
+    owner:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref:'user',
+      required: true
+    },
     moviename:{
         type:String
     },
